@@ -25292,12 +25292,12 @@
         }
       },
       "links": {},
-      "address": "0xBD14449bA2e488CB84aA120E03D8b5e5A16f9047",
-      "transactionHash": "0x7f0fd9f2797d89f273dbb8f5604b693092d832da79b023bf88364b5917650a47"
+      "address": "0x88F6bE76FaF9fc375fAEB57217e4eD7dB835e877",
+      "transactionHash": "0xc93ef00e1d93b030f45aab1b9406aad5459cd28ef02107e95908d6409c3263cb"
     }
   },
   "schemaVersion": "3.2.5",
-  "updatedAt": "2020-10-23T17:46:55.333Z",
+  "updatedAt": "2020-10-23T22:35:02.070Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "see https://eips.ethereum.org/EIPS/eip-721",
