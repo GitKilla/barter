@@ -10,6 +10,7 @@ contract Swap {
 
     struct TradeOffer {
         address offerer;
+        //address asker;
         uint[] offer;
         uint[] ask;
         address[] offerContract;
@@ -71,6 +72,7 @@ contract Swap {
         offersCreatedByAddress[msg.sender].push(offerCount);
         offersCreatedCountByAddress[msg.sender] = offersCreatedCountByAddress[msg.sender]+1;
         offers[offerCount] = TradeOffer({offerer: msg.sender
+          //  , asker: _targetAddress
             , offer: _offer
             , offerContract:_offerContract
             , ask: _ask
@@ -88,6 +90,7 @@ contract Swap {
     function acceptOffer(uint _offerId) public returns (bool) {
         require(offers[_offerId].offerer != 0x0000000000000000000000000000000000000000, "Offerer must not be the burn address");
         require(offers[_offerId].state == State.Active, "Offer must be active");
+       // require(offers[_offerId].asker == msg.sender, "Offer can only be accepted by intended recipient");
         
         for(uint i = 0; i < offers[_offerId].ask.length; i++) {
             ERC721 con = ERC721(offers[_offerId].askContract[i]);

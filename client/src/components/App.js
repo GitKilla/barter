@@ -44,6 +44,7 @@ class App extends Component {
 
   componentDidMount = async () => {
     try {
+      console.log("Begun")
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
 
@@ -54,22 +55,23 @@ class App extends Component {
 
 
       // Get the Test NFT contract instance.
+      console.log("Getting NFT Contract");
       const networkId = await web3.eth.net.getId();
       const deployedNetworkTestNFT = TestNFTContract.networks[networkId];
       const instanceTestNFT = new web3.eth.Contract(
         TestNFTContract.abi,
-        "0x88F6bE76FaF9fc375fAEB57217e4eD7dB835e877"
+        "0x31eE07b81C0A1478f8cb9eB174d03589Ed6cd174"
       );
 
-
+      console.log("Getting swap Contract");
       // Get the Swap contract instance.
       const deployedNetworkSwap = Swap.networks[networkId];
       const instanceSwap = new web3.eth.Contract(
         Swap.abi,
-        "0x452759b2c48cE751206e8a28b329a807c4FE007e",
+        "0x33C7159150E7d04F2Cda5EbFc71cc0eE2a47e31B",
       );
       
-
+      console.log("Setting state");
       this.setState({ web3, 
         accounts, 
         contractNFT: instanceTestNFT, 
@@ -78,9 +80,11 @@ class App extends Component {
       });
 
 
+      console.log("Getting user data");
       //this is an array of arrarys of size two, with NFTId and imageurl
       const userNFTs = await this.getData(accounts[0]);
       
+      console.log("Setting more state");
       this.setState({ web3, 
         accounts, 
         contractNFT: instanceTestNFT, 
@@ -113,11 +117,11 @@ class App extends Component {
     var askContractArr = [];
     for(var i = 0; i < this.state.offeredNFTIds.length; i++) {
 
-      offerContractArr[i] = "0x88F6bE76FaF9fc375fAEB57217e4eD7dB835e877";//this.state.contractNFT.address;
+      offerContractArr[i] = "0x31eE07b81C0A1478f8cb9eB174d03589Ed6cd174";//this.state.contractNFT.address;
     }
 
     for(var i = 0; i < this.state.askedNFTIds.length; i++) {
-      askContractArr[i] = "0x88F6bE76FaF9fc375fAEB57217e4eD7dB835e877";//this.state.contractNFT.address;
+      askContractArr[i] = "0x31eE07b81C0A1478f8cb9eB174d03589Ed6cd174";//this.state.contractNFT.address;
     }
     
     const transactionReceipt = await this.state.contractSwap.methods.addOffer(this.state.offeredNFTIds
@@ -339,6 +343,17 @@ class App extends Component {
             // xs={3}
             style={{ minHeight: '10vh', padding:'1'}}
           >
+
+          {/* <form onSubmit={this.handleSubmit}>
+              <FormGroup>
+                <div>&nbsp;</div>
+                <TextField 
+                  value={this.state.traderAddress} 
+                  id="outlined-basic" 
+                  label="Address" 
+                  variant="outlined"  />
+              </FormGroup>
+            </form> */}
           
           <NFTCardGrid 
             offeredNFTIds={this.state.offeredNFTIds} 
