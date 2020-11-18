@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 
 
 
@@ -29,10 +30,10 @@ export default function ButtonAppBar(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Icon edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton edge="start" onClick={() => {props.mineMint()}} className={classes.menuButton} color="inherit" aria-label="menu">
             <img src="https://i.ibb.co/Xtsrjvs/1f6cd.png" alt="Barter Finance" height="40" width="40" />
             {/* <MenuIcon /> */}
-          </Icon>
+          </IconButton>
           <Typography variant="h6" className={classes.title}>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Button style={{fontSize:'36px', paddingTop:'0px', paddingBottom:'0px'}} onClick={() => {props.setActivePage("barter")}} color="secondary">Barter</Button>
           </Typography>

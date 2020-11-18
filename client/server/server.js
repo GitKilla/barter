@@ -1,7 +1,14 @@
 const path = require('path');
 const express = require('express');
 const app = express();
-const publicPath = path.join(__dirname, '..', 'build');
+var dirToUse = '';
+if (process.env.PORT) {
+   dirToUse = 'build'
+} else {
+   dirToUse = 'public'
+}
+console.log(dirToUse);
+const publicPath = path.join(__dirname, '..', dirToUse);
 const port = process.env.PORT || 5000;
 
 app.use(express.static(publicPath));

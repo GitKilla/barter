@@ -39,7 +39,12 @@ class App extends Component {
             askedNFTIds: [],
             activePage: "barter",
             offerArray: [],
-            askArray: []
+            askArray: [],
+            ethOffer: null,
+            ethAsk: null,
+            swapApproval: null,
+            swapAddress: null,
+            NFTAddress: null
           };
 
   componentDidMount = async () => {
@@ -48,10 +53,18 @@ class App extends Component {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
 
+      //ropsten addresses
+      // const swapAddress = "0xb7a516820064118c02CFAE0E5cDBeC8169eEC8F7";
+      // const NFTAddress = "0x192705345aCEe6481354A09caBc695C6107a147b"; 
+
+      //local ganache addresses
+      const swapAddress = "0xa69286149daBb0EA5cCb730DafC37A6f8E0409E9";
+      const NFTAddress = "0x3ea0761e7aB546E72bb0aCe628BDdCF4aCDD646b";
+
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
       const primaryAddress = accounts[0];
-      web3.eth.defaultAccount = web3.eth.accounts[0]
+      web3.eth.defaultAccount = web3.eth.accounts[0];
 
 
       // Get the Test NFT contract instance.
@@ -60,7 +73,7 @@ class App extends Component {
       const deployedNetworkTestNFT = TestNFTContract.networks[networkId];
       const instanceTestNFT = new web3.eth.Contract(
         TestNFTContract.abi,
-        "0x31eE07b81C0A1478f8cb9eB174d03589Ed6cd174"
+        NFTAddress
       );
 
       console.log("Getting swap Contract");
@@ -68,15 +81,20 @@ class App extends Component {
       const deployedNetworkSwap = Swap.networks[networkId];
       const instanceSwap = new web3.eth.Contract(
         Swap.abi,
-        "0x33C7159150E7d04F2Cda5EbFc71cc0eE2a47e31B",
+        swapAddress
       );
-      
+
+      // const swapApproved = swap.
+      // const {contractNFT, contractSwap } = this.state;
+      const isApproved = await instanceTestNFT.methods.isApprovedForAll(accounts[0], swapAddress).call();
+      console.log("Is Approved: "+isApproved);
       console.log("Setting state");
       this.setState({ web3, 
         accounts, 
         contractNFT: instanceTestNFT, 
         contractSwap: instanceSwap, 
-        userAddress: accounts[0]
+        userAddress: accounts[0],
+        swapApproval: isApproved
       });
 
 
@@ -91,7 +109,9 @@ class App extends Component {
         contractSwap: instanceSwap, 
         userAddress: accounts[0],
         numUserNFTs: userNFTs.length,
-        userNFTs: userNFTs
+        userNFTs: userNFTs,
+        swapAddress: swapAddress,
+        NFTAddress: NFTAddress
       });
 
       var offerData = await this.getOffers()
@@ -112,33 +132,45 @@ class App extends Component {
   };
 
   proposeTrade = async (event) => { // add approval check beforehand
+    console.log("Break 0");
     event.preventDefault();
     var offerContractArr = [];
     var askContractArr = [];
+    // const web3 = await getWeb3();
+    console.log("Break 1");
     for(var i = 0; i < this.state.offeredNFTIds.length; i++) {
 
-      offerContractArr[i] = "0x31eE07b81C0A1478f8cb9eB174d03589Ed6cd174";//this.state.contractNFT.address;
+      offerContractArr[i] = this.state.NFTAddress;
     }
 
     for(var i = 0; i < this.state.askedNFTIds.length; i++) {
-      askContractArr[i] = "0x31eE07b81C0A1478f8cb9eB174d03589Ed6cd174";//this.state.contractNFT.address;
+      askContractArr[i] = this.state.NFTAddress;
     }
-    
-    const transactionReceipt = await this.state.contractSwap.methods.addOffer(this.state.offeredNFTIds
-                                                                            , offerContractArr
-                                                                            ,this.state.askedNFTIds
-                                                                            ,askContractArr
-                                                                            ,0
-                                                                            ,0
-                                                                            ,this.state.traderAddress).send({from:this.state.userAddress})
+    console.log("Break 2");
+    const _offerValue = ((parseFloat(this.state.ethOffer)*(10**18)) || 0).toString();
+    const _askValue = ((parseFloat(this.state.ethAsk)*(10**18)) || 0).toString();
+    console.log("Eth offer - propose trade: "+_offerValue);
+    console.log("Eth ask - propose trade: "+_askValue);
+    if(this.state.swapApproval) {
+      const transactionReceipt = await this.state.contractSwap.methods.addOffer(this.state.offeredNFTIds
+                                                                              , offerContractArr
+                                                                              ,this.state.askedNFTIds
+                                                                              ,askContractArr
+                                                                              ,_offerValue
+                                                                              ,_askValue
+                                                                              ,this.state.traderAddress).send({from:this.state.userAddress, value:_offerValue})
 
-    for(var i = 0; i < this.state.offeredNFTIds.length; i++) {
-      this.removeNFTfromOffered("offer", this.state.offeredNFTIds[i])
-    }
+      for(var i = 0; i < this.state.offeredNFTIds.length; i++) {
+        this.removeNFTfromOffered("offer", this.state.offeredNFTIds[i])
+      }
 
-    for(var i = 0; i < this.state.askedNFTIds.length; i++) {
-      this.removeNFTfromOffered("ask", this.state.askedNFTIds[i])
+      for(var i = 0; i < this.state.askedNFTIds.length; i++) {
+        this.removeNFTfromOffered("ask", this.state.askedNFTIds[i])
+      }
+    } else {
+      const transactionReceipt = await this.state.contractNFT.methods.setApprovalForAll(this.state.swapAddress, "true").send({from:this.state.userAddress});
     }
+    console.log("Break 3");
   }
 
   acceptTrade = async (offerId) => { // add approval check beforehand
@@ -161,7 +193,8 @@ class App extends Component {
       arr.push(nftid)
       this.setState({askedNFTIds: arr});
     }
-
+    console.log("Asked NFTs: "+this.state.askedNFTIds);
+    console.log("Offered NFTs: "+this.state.offeredNFTIds);
   };
 
   removeNFTfromOffered = (type, nftid) => {
@@ -213,6 +246,9 @@ class App extends Component {
       
       var offer = await this.getOfferData(offerId)
       var offerImages = []
+
+      var offVal = await contractSwap.methods.getOfferOffVal(offerId).call()
+      var askVal = await contractSwap.methods.getOfferAskVal(offerId).call()
       
       for(var j = 0; j < offer[0].length; j++) {
         var res = await fetch('https://axieinfinity.com/api/v2/axies/'+String(offer[0][j]));
@@ -222,14 +258,14 @@ class App extends Component {
 
       var askImages = []
       for(var j = 0; j < offer[1].length; j++) {
-        var res = await fetch('https://axieinfinity.com/api/v2/axies/'+String(offer[0][j]));
+        var res = await fetch('https://axieinfinity.com/api/v2/axies/'+String(offer[1][j]));
         res = await res.json();
         askImages.push(res.image)
       }
       
       if(offerState) {
         
-        NFTdata_2.push([offer[0], offer[1], offerImages, askImages, offerId]);
+        NFTdata_2.push([offer[0], offer[1], offerImages, askImages, offerId, offVal, askVal]);
       }
       
     }
@@ -249,6 +285,9 @@ class App extends Component {
       var offerState = await contractSwap.methods.getOfferState(offerId).call()
       var offer = await this.getOfferData(offerId)
       var offerImages = []
+
+      var offVal = await contractSwap.methods.getOfferOffVal(offerId).call()
+      var askVal = await contractSwap.methods.getOfferAskVal(offerId).call()
       
       for(var j = 0; j < offer[0].length; j++) {
         var res = await fetch('https://axieinfinity.com/api/v2/axies/'+String(offer[0][j]));
@@ -258,13 +297,13 @@ class App extends Component {
 
       var askImages = []
       for(var j = 0; j < offer[1].length; j++) {
-        var res = await fetch('https://axieinfinity.com/api/v2/axies/'+String(offer[0][j]));
+        var res = await fetch('https://axieinfinity.com/api/v2/axies/'+String(offer[1][j]));
         res = await res.json();
         askImages.push(res.image)
       }
 
       if(offerState) {
-        NFTdata.push([offer[0], offer[1], offerImages, askImages, offerId]);
+        NFTdata.push([offer[0], offer[1], offerImages, askImages, offerId, offVal, askVal]);
       }
       
     }
@@ -288,7 +327,7 @@ class App extends Component {
     const askLength = await contractSwap.methods.getOfferLengthFromAsk(offerId).call()
     var askIds = []
     // const numOffers = contractSwap.methods.offerCountByAddress(this.state.userAddress)
-    for(var i = 0; i < offerLength; i++) {
+    for(var i = 0; i < askLength; i++) {
       askIds.push (await contractSwap.methods.getOfferFromAsk(offerId, i).call())
     }
 
@@ -302,6 +341,7 @@ class App extends Component {
     const traderNFTs = await this.getData(this.state.traderAddress);
 
     this.setState({addressEntered: true, traderNFTs: traderNFTs, numTraderNFTs: traderNFTs.length});
+    console.log("Event value: "+event.target.value);
     
   };
 
@@ -309,9 +349,30 @@ class App extends Component {
 
     event.preventDefault();
     this.setState({traderAddress: event.target.value});
-    
+    console.log("Address: "+this.state.traderAddress);
+    console.log("Event value: "+event.target.value);
   };
 
+  handleEthOfferChange = async (event) => {
+
+    this.setState({ethOffer: event.target.value});
+    console.log("Eth offer: "+ this.state.ethOffer);
+    console.log("Event value: "+event.target.value);
+  };
+
+  handleEthAskChange = async (event) => {
+
+    this.setState({ethAsk: event.target.value});
+    console.log("Eth ask: "+ this.state.ethAsk);
+    console.log("Event value: "+event.target.value);
+  };
+
+  mineMint = async () => {
+    const {contractNFT, contractSwap } = this.state;
+
+    // mint random id nft
+    const receipt = await contractNFT.methods.mine(this.state.userAddress, Math.floor(Math.random()*1000)).send({from:this.state.userAddress})
+  };
 
   render() {
     
@@ -324,15 +385,55 @@ class App extends Component {
       return (
 
         <div className="App">
-          <Bar setActivePage={this.setActivePage}></Bar>
+          <Bar mineMint={this.mineMint} setActivePage={this.setActivePage}></Bar>
           <div>
           {/* {(this.state.activePage == "barter") ? */}
           <div>&nbsp;</div>
           <form onSubmit={this.proposeTrade}>
-          <Button type='submit' color='primary' variant='outlined'><Typography fontSize={18} >Propose Trade</Typography></Button>
+          <Button type='submit' color='primary' variant='outlined'><Typography fontSize={18}>{this.state.swapApproval?"Propose Trade":"Approve Trading"}</Typography></Button>
           </form>
           <div>&nbsp;</div>
           <div>&nbsp;</div>
+
+
+          <Grid container
+            spacing={1}
+            flexgrow={1}
+            alignItems="center"
+            justify="space-evenly"
+            // xs={3}
+            style={{ minHeight: '10vh', padding:'1', maxHeight:'10vh'}}
+          >
+          
+          <Grid item style={{ minHeight: '10vh', padding:'1', maxHeight:'10vh', minWidth:'40%', maxWidth: '40%'}}>
+          <form onChange={this.handleEthOfferChange}>
+              <FormGroup>
+                <TextField 
+                  value={this.state.ethOffer} 
+                  id="ethoffer" 
+                  label="$ETH Offer"
+                  type="number" 
+                  variant="outlined"  />
+              </FormGroup>
+            </form>
+            </Grid>
+
+          <Grid item style={{ minHeight: '10vh', padding:'1', maxHeight:'10vh', minWidth:'40%', maxWidth: '40%'}}>
+          {(!this.state.addressEntered) ? <div></div> :
+          <form onChange={this.handleEthAskChange}>
+              <FormGroup>
+                <TextField 
+                  value={this.state.ethAsk}
+                  id="ethask" 
+                  label="$ETH Ask"
+                  type="number" 
+                  variant="outlined"  />
+              </FormGroup>
+            </form>
+            }
+            </Grid>
+            </Grid>
+            <div>&nbsp;</div>
         
 
           <Grid container
@@ -341,30 +442,27 @@ class App extends Component {
             alignItems="flex-start"
             justify="space-evenly"
             // xs={3}
-            style={{ minHeight: '10vh', padding:'1'}}
+            style={{ minHeight: '10vh', padding:'1', maxHeight:'10vh'}}
           >
-
-          {/* <form onSubmit={this.handleSubmit}>
-              <FormGroup>
-                <div>&nbsp;</div>
-                <TextField 
-                  value={this.state.traderAddress} 
-                  id="outlined-basic" 
-                  label="Address" 
-                  variant="outlined"  />
-              </FormGroup>
-            </form> */}
           
           <NFTCardGrid 
-            offeredNFTIds={this.state.offeredNFTIds} 
-            pullNFTOffer={this.removeNFTfromOffered} 
+            offeredNFTIds={this.state.offeredNFTIds}
+            pullNFTOffer={this.removeNFTfromOffered}
             pushNFTOffer={this.addNFTToOffered}
             nftType={"offer"}
             numCards={this.state.numUserNFTs} 
             userNFTs={this.state.userNFTs} 
             maxWidth="40%" minWidth="40%"
             minHeight="60vh"></NFTCardGrid>
-          
+{/* 
+          <Grid container
+            spacing={1}
+            flexgrow={1}
+            alignItems="center"
+            justify="space-evenly"
+            // xs={3}
+            style={{ minHeight: '10vh', padding:'1', maxHeight:'10vh', minWidth:'40%', maxWidth: '40%'}}
+          > */}
           
           {(!this.state.addressEntered) ? 
             <Grid
@@ -385,7 +483,7 @@ class App extends Component {
               </FormGroup>
                 </form>
                 </Grid>
-            : 
+            :      
             <NFTCardGrid 
               offeredNFTIds={this.state.askedNFTIds} 
               pullNFTOffer={this.removeNFTfromOffered} 
@@ -409,6 +507,10 @@ class App extends Component {
           <div>&nbsp;</div>
           <div>&nbsp;</div>
           <div>&nbsp;</div>
+
+          
+          
+
           <Grid container
             spacing={1}
             flexgrow={1}
@@ -422,7 +524,7 @@ class App extends Component {
                 maxWidth: '80%'
                 , minWidth: '80%'
                 , minHeight: '30vh'
-                , maxHeight: '3=0vh'
+                , maxHeight: '30vh'
                 , paddingLeft: 0
                 , paddingTop: 10
                 , paddingBottom:10

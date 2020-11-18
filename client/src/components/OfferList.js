@@ -30,6 +30,8 @@ function printOffers(offerArray, type, acceptTrade) {
             offerImages={type?offerArray[i][2]:offerArray[i][3]}
             askImages={type?offerArray[i][3]:offerArray[i][2]}
             offerId={offerArray[i][4]}
+            offerVal={type?offerArray[i][5]:offerArray[i][6]}
+            askVal={type?offerArray[i][6]:offerArray[i][5]}
             type={type}
             acceptTrade={acceptTrade}
             maxWidth="100%" maxHeight='20vh'

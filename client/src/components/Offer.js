@@ -43,12 +43,14 @@ export default function Offer(props) {
             numCards={props.askIds.length} 
             userNFTs={props.askIds}
             images={props.askImages}
+            val={props.askVal}
             maxWidth="40%" maxHeight='10vh'></OfferGrid>
             <img width={512*0.12} height={512*0.12} src='https://i.imgur.com/6bJqAwg.png'/>
         <OfferGrid 
             numCards={props.offerIds.length} 
             userNFTs={props.offerIds} 
             images={props.offerImages}
+            val={props.offerVal}
             maxWidth="40%"  maxHeight='10vh'></OfferGrid>
         </Grid>
         <Grid container
