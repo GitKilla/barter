@@ -58,6 +58,7 @@ export default function NFTCardGrid(props) {
         , paddingLeft: 40
         , paddingTop: 20
         , paddingBottom:30
+        , overflow:'auto'
         , background:'linear-gradient(315deg, #f5a9ec, #f0a695 90%)' }}>
     <Grid
         container

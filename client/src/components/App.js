@@ -54,12 +54,12 @@ class App extends Component {
       const web3 = await getWeb3();
 
       //ropsten addresses
-      // const swapAddress = "0xb7a516820064118c02CFAE0E5cDBeC8169eEC8F7";
-      // const NFTAddress = "0x192705345aCEe6481354A09caBc695C6107a147b"; 
+      const swapAddress = "0xb7a516820064118c02CFAE0E5cDBeC8169eEC8F7";
+      const NFTAddress = "0x192705345aCEe6481354A09caBc695C6107a147b"; 
 
       //local ganache addresses
-      const swapAddress = "0xa69286149daBb0EA5cCb730DafC37A6f8E0409E9";
-      const NFTAddress = "0x3ea0761e7aB546E72bb0aCe628BDdCF4aCDD646b";
+      // const swapAddress = "0xa69286149daBb0EA5cCb730DafC37A6f8E0409E9";
+      // const NFTAddress = "0x3ea0761e7aB546E72bb0aCe628BDdCF4aCDD646b";
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
@@ -453,7 +453,7 @@ class App extends Component {
             numCards={this.state.numUserNFTs} 
             userNFTs={this.state.userNFTs} 
             maxWidth="40%" minWidth="40%"
-            minHeight="60vh"></NFTCardGrid>
+            minHeight="60vh" maxHeight="60vh"></NFTCardGrid>
 {/* 
           <Grid container
             spacing={1}
@@ -491,7 +491,7 @@ class App extends Component {
               nftType={"ask"}
               numCards={this.state.numTraderNFTs} 
               userNFTs={this.state.traderNFTs} 
-              maxWidth="40%" minWidth="40%" minHeight="60vh"></NFTCardGrid>
+              maxWidth="40%" minWidth="40%" minHeight="60vh" maxHeight="60vh"></NFTCardGrid>
           }
         
           </Grid>
