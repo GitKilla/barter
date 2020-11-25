@@ -29,11 +29,17 @@ Once the contracts have been deployed and the user interface has successfully in
 2. The Swap contract must whitelist the TestNFTContract using approveNFT. This can be done via truffle console with the following commands (these should be the only commands you need to run from console, the rest can be done through the GUI):
 
 `var axie = await TestNFTContract.at(*INSERT FIRST NFT CONTRACT ADDRESS HERE*)`
+
 `var tsb = await TestNFTContract.at(*INSERT SECOND NFT CONTRACT ADDRESS HERE*)`
+
 `var dcl = await TestNFTContract.at(*INSERT THIRD NFT CONTRACT ADDRESS HERE*)`
+
 `var swap = await Swap.at(Swap.address)`
+
 `swap.approveNFT(axie.address, {from:accounts[0]})`
+
 `swap.approveNFT(tsb.address, {from:accounts[0]})`
+
 `swap.approveNFT(dcl.address, {from:accounts[0]})`
 
 3. You will need to approve the Swap contract for use of your NFTs. This can be done via the APPROVE TRADING button that will show up only if you have not approved the contract
