@@ -43,6 +43,7 @@ export default function Offer(props) {
             numCards={props.askIds.length} 
             userNFTs={props.askIds}
             images={props.askImages}
+            names={props.askNames}
             val={props.askVal}
             maxWidth="40%" maxHeight='10vh'></OfferGrid>
             <img width={512*0.12} height={512*0.12} src='https://i.imgur.com/6bJqAwg.png'/>
@@ -50,6 +51,7 @@ export default function Offer(props) {
             numCards={props.offerIds.length} 
             userNFTs={props.offerIds} 
             images={props.offerImages}
+            names={props.offerNames}
             val={props.offerVal}
             maxWidth="40%"  maxHeight='10vh'></OfferGrid>
         </Grid>
@@ -67,7 +69,7 @@ export default function Offer(props) {
     </Card>
     <div style={{minWidth:'5%'}}></div>
     <Grid container alignItems="center" justify="space-evenly">
-    <Button onClick={() => props.acceptTrade(props.offerId)} type='submit' variant='outlined' color='inherit' style={{color:props.type?'#0AC41C':'#8b0000', backgroundColor:props.type?'':'', maxHeight:'5vh'}}>
+    <Button onClick={() => {console.log("Within offer: "+props.askContracts);props.acceptTrade(props.offerId, props.askContracts)}} type='submit' variant='outlined' color='inherit' style={{color:props.type?'#0AC41C':'#8b0000', backgroundColor:props.type?'':'', maxHeight:'5vh'}}>
                 <Typography>{props.type?"Accept":"Cancel"}</Typography>
             </Button>
             </Grid>

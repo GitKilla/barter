@@ -15,14 +15,16 @@ export default function MediaCard(props) {
 
   const useStyles = makeStyles({
     root: {
-      maxWidth: 128*1.3,
-      minWidth:'15vh',
+      maxWidth: 128*1.1,
+      maxHeight: '20vh',
+      // minHeight: '20vh',
+     // minWidth:'15vh',
       backgroundColor: props.rootBackground,
       boxShadow:3
     },
     media: {
-      height: 96*1.3,
-      width: 128*1.3,
+      height: 96*1.1,
+      width: 128*1.1,
       objectFit: 'cover',
       //width: "33%",
       align: "center",
@@ -37,9 +39,9 @@ export default function MediaCard(props) {
     <Card className={classes.root} styles={{boxShadow:3}}>
       <CardActionArea component='button' onClick={() => {
         props.offeredNFTIds.includes(props.nftid)?
-          props.pullNFTOffer(props.nftType, props.nftid)
+          props.pullNFTOffer(props.nftType, props.nftid, props.contract)
           :
-          props.pushNFTOffer(props.nftType, props.nftid)
+          props.pushNFTOffer(props.nftType, props.nftid, props.contract)
         }}>
       <Grid
         container
@@ -61,8 +63,8 @@ export default function MediaCard(props) {
         </CardMedia>
         </Grid>
         <Grid item>
-          <p style={{fontFamily:'Arial', fontSize:18}}>
-            <b>Axie #{props.nftid}</b>
+          <p style={{ fontFamily:'Arial', fontSize:16, minHeight:'100%', verticalAlign: 'middle'}}>
+            <b>{props.name}</b>
             </p>
           </Grid>
         </Grid>

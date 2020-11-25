@@ -20,25 +20,29 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function printCards(numCards, userNFTs, images, val) {
+function printCards(numCards, userNFTs, images, val, names) {
     var cards = [];
+    if(val > 0)
+      cards.push(
+        <Grid key={numCards} item xs={3}>
+          <ValueIcon 
+              ethVal={val}
+              rootBackground={"#F9F9F9"}
+              mediaBackground={"#F1F1F1"}
+              />
+        </Grid>
+      )
+
     for(var i = 0; i < numCards; i++) {
-      if(i == 0) {
-        cards.push(
-          <Grid key={i} item xs={3}>
-            <ValueIcon 
-                ethVal={val}
-                rootBackground={"#F9F9F9"}
-                mediaBackground={"#F1F1F1"}
-                />
-          </Grid>
-        )
-      }
+
+        
+      
         cards.push( <Grid key={i} item xs={3}>
             <OfferIcon 
                 key={i} 
                 nftid={userNFTs[i]} 
                 image={images[i]}
+                name={names[i]}
                 rootBackground={"#F9F9F9"}
                 mediaBackground={"#F1F1F1"}
                 />
@@ -53,7 +57,7 @@ export default function NFTCardGrid(props) {
 
   return (
     
-    <Card style={{ maxHeight: props.maxHeight
+    <Card elevation='0' style={{ maxHeight: props.maxHeight
         , maxWidth: '40%'
         , minWidth: '40%'
         , paddingLeft: 10
@@ -61,6 +65,7 @@ export default function NFTCardGrid(props) {
         , paddingBottom:15
         , background:'#F9F9F9' //'#F2A7C0' 
         , overflow:'auto'
+        , borderRadius: '0px 0px 0px 0px'
         }}>
     
   
@@ -73,7 +78,7 @@ export default function NFTCardGrid(props) {
         >
         {/* <Card> */}
         
-            {printCards(props.numCards, props.userNFTs, props.images, props.val)}
+            {printCards(props.numCards, props.userNFTs, props.images, props.val, props.names)}
         {/* </Card> */}
             
   

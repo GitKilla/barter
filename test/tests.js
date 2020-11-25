@@ -149,4 +149,76 @@ contract("Swap", accounts => {
     
   });
 
+  it("...should properly pass fee to owner.", async () => {
+
+    const swap = await Swap.deployed();
+    const erc721 = await TestNFTContract.deployed();
+
+    // swap.defaults({gasPrice:0})
+
+    await erc721.mine(accounts[4],5, {from:accounts[2]})
+    await erc721.mine(accounts[4],6, {from:accounts[2]})
+    await erc721.mine(accounts[5],7, {from:accounts[2]})
+    await erc721.mine(accounts[5],8, {from:accounts[2]})
+
+    // set approval for swap contract to move account 0 and 1's NFTs
+    await erc721.setApprovalForAll(swap.address,true, {from:accounts[4]});
+    await erc721.setApprovalForAll(swap.address,true, {from:accounts[5]});
+
+    await swap.setFee('1000000000000000000', {from:accounts[0]});
+    const initialBalTrader = (await web3.eth.getBalance(accounts[5]))
+    const initialBalOffer = (await web3.eth.getBalance(accounts[4]))
+    const initialBalOwner = (await web3.eth.getBalance(accounts[0]))
+
+    // add swap offer from account 0
+    var receipt1 = await swap.addOffer([5,6]
+      ,[erc721.address,erc721.address]
+      ,[7,8]
+      ,[erc721.address,erc721.address]
+      ,'1000000000000000000'
+      ,0
+      ,accounts[5]
+      , {from:accounts[4], value:'2000000000000000000'})
+
+    // calculate gas paid on transaction, I ended up just setting gas to 0 so this does not work
+    const tx1 = await web3.eth.getTransaction(receipt1.tx);
+    const gasPrice1 = tx1.gasPrice;
+    const gasUsed1 = receipt1.receipt.gasUsed;
+
+    // accept offer from account 1
+    var receipt2 = await swap.acceptOffer(2, {from:accounts[5], value:'1000000000000000000'});
+    const intBalTrader = (await web3.eth.getBalance(accounts[5]))
+
+    // calculate gas paid on second transaction, I ended up just setting gas to 0 so this does not work
+    const tx2 = await web3.eth.getTransaction(receipt2.tx);
+    const gasPrice2 = tx2.gasPrice;
+    const gasUsed2 = receipt2.receipt.gasUsed;
+
+    // get NFT owners post-swap
+    var owner1 = await erc721.ownerOf(5)
+    var owner2 = await erc721.ownerOf(6)
+    var owner3 = await erc721.ownerOf(7)
+    var owner4 = await erc721.ownerOf(8)
+
+    newBalOffer = (await web3.eth.getBalance(accounts[4]))
+    newBalTrader = (await web3.eth.getBalance(accounts[5]))
+    newBalOwner = (await web3.eth.getBalance(accounts[0]))
+
+
+    // verify the assets have successfully swapped ownership
+    assert.equal(owner1, accounts[5])
+    assert.equal(owner2, accounts[5])
+    assert.equal(owner3, accounts[4])
+    assert.equal(owner4, accounts[4])
+
+    // Verify the proper values are in each of the accounts
+    // +1ETH received in offer -1ETH fee for person who was offered the trade (trader)
+    // -1ETH offered -1ETH fee for offerer
+    // +2 ETH for owner 
+    assert.equal(parseFloat(initialBalTrader), parseFloat(newBalTrader))
+    assert.equal(parseFloat(initialBalOffer), parseFloat(newBalOffer)+parseFloat('2000000000000000000'))
+    assert.equal(parseFloat(initialBalOwner)+parseFloat('2000000000000000000'), parseFloat(newBalOwner))
+
+  });
+
 });

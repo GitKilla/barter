@@ -26,9 +26,11 @@ function printCards(numCards, userNFTs, pushNFTOffer, pullNFTOffer, offeredNFTId
                 pullNFTOffer={pullNFTOffer}
                 offeredNFTIds={offeredNFTIds}
                 nftType={nftType}
-                key={i} 
+                key={i}
                 nftid={userNFTs[i][0]} 
-                image={userNFTs[i][1]} 
+                image={userNFTs[i][1]}
+                name={userNFTs[i][2]}
+                contract={userNFTs[i][3]}
                 rootBackground={offeredNFTIds.includes(userNFTs[i][0])?"#99FF99":"#F9F9F9"}
                 mediaBackground={offeredNFTIds.includes(userNFTs[i][0])?"#33ff33":"#F1F1F1"}
                 />
@@ -41,12 +43,12 @@ function printCards(numCards, userNFTs, pushNFTOffer, pullNFTOffer, offeredNFTId
 export default function NFTCardGrid(props) {
   const classes = useStyles();
 
-  var pushNFTOffer = (nftType, nftid) => {
-    props.pushNFTOffer(nftType, nftid)
+  var pushNFTOffer = (nftType, nftid, contract) => {
+    props.pushNFTOffer(nftType, nftid, contract)
   }
 
-  var pullNFTOffer = (nftType, nftid) => {
-      props.pullNFTOffer(nftType, nftid)
+  var pullNFTOffer = (nftType, nftid, contract) => {
+      props.pullNFTOffer(nftType, nftid, contract)
   }
 
   return (
@@ -56,9 +58,11 @@ export default function NFTCardGrid(props) {
         , maxWidth: props.maxWidth
         , minWidth: props.minWidth
         , paddingLeft: 40
+        , paddingRight: 40
         , paddingTop: 20
         , paddingBottom:30
-        , overflow:'auto'
+        , borderRadius: '20px 20px 20px 20px'
+      //  , overflow:'auto'
         , background:'linear-gradient(315deg, #f5a9ec, #f0a695 90%)' }}>
     <Grid
         container
@@ -75,10 +79,27 @@ export default function NFTCardGrid(props) {
         justify="center"
         style={{ maxHeight: '100%', maxWidth: '100%' }}
         >
-        {/* <Card> */}
-        
+         <Card  elevation='0' style={{ maxHeight: '45vh'
+        , minHeight: '45vh'
+        , maxWidth: '85%'
+        , minWidth: '85%'
+        , paddingLeft: 40
+        , paddingTop: 40
+        , paddingBottom:40
+        , paddingRight:40
+        , overflow:'auto'
+        , borderRadius: '0px 0px 0px 0px'
+        , background:'#f7d7f3' }}>
+        <Grid
+        container
+        spacing={2}
+        alignItems="flex-start"
+        justify="flex-start"
+        style={{ maxHeight: '100%', maxWidth: '100%' }}
+        >
             {printCards(props.numCards, props.userNFTs, pushNFTOffer, pullNFTOffer, props.offeredNFTIds, props.nftType)}
-        {/* </Card> */}
+            </Grid>
+        </Card>
             
   
         </Grid>

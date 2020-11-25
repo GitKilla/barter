@@ -50,14 +50,14 @@ export default function MediaCard(props) {
           
           // image="https://lh3.googleusercontent.com/cR7AHCK1f9rD9KwUos1q5II66R5M0I8unER7O8mLELkVDXp9sysNuo9TD1Caa7L0w48D-__EGEUbQXV2sZDdRGg=s0"
           // image="https://storage.googleapis.com/assets.axieinfinity.com/axies/48133/axie/axie-full-transparent.png"
-          title="Axie"
+          title="NFT"
         >
           <img src={props.image} height='100%' width='100%'></img>
         </CardMedia>
         </Grid>
         <Grid item>
           <p style={{fontFamily:'Arial', fontSize:12}}>
-            <b>Axie #{props.nftid}</b>
+            <b>{props.name.substring(5)}</b>
             </p>
           </Grid>
         </Grid>
