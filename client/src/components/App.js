@@ -60,9 +60,11 @@ class App extends Component {
       const web3 = await getWeb3();
       console.log("Yikes")
 
-      //ropsten addresses
-      // const swapAddress = "0xb7a516820064118c02CFAE0E5cDBeC8169eEC8F7";
-      // const NFTAddress = "0x192705345aCEe6481354A09caBc695C6107a147b";
+      // ropsten addresses
+      // const swapAddress = "0x7652a6791c304794de601f366B5B768CDb4CfBeA";
+      // const NFTAddress = "0x13b939f04e9Ea0E8C28f4E8006A081E28b9a440e";
+      // const NFTAddress2 = "0x4633555F8FbFA47360AC8bA3B02967cf6dF4718f";
+      // const NFTAddress3 = "0x4DE4640051ECD928983Ce96dB7285Bc5AB0027a4";
 
       //local ganache addresses
       var swapAddress = "0xb6fc10BB88Cf9350bbBa356b3fb516BF3727632A";
@@ -233,6 +235,7 @@ class App extends Component {
     const _msgValue = parseFloat(_offerValue)+parseFloat(fee);
     console.log("Msg Value: "+_msgValue);
     console.log("Offer Value: "+_offerValue);
+    console.log("Test change")
 
     var dedup = Array.from(new Set(offerContractArr));
     console.log("Contracts Post-dedup: "+dedup)
@@ -243,8 +246,9 @@ class App extends Component {
       var isApproved = await this.state.trackedNFTInstances[contractIndex].methods.isApprovedForAll(this.state.userAddress, this.state.swapAddress).call();
       // var isInAsk = 
       console.log("IS APPROVED: "+isApproved)
+      // var temp = await
       if(!isApproved) 
-        var temp = await this.state.trackedNFTInstances[contractIndex].methods.setApprovalForAll(this.state.swapAddress, "true").send({from:this.state.userAddress});
+         this.state.trackedNFTInstances[contractIndex].methods.setApprovalForAll(this.state.swapAddress, "true").send({from:this.state.userAddress});
     }
 
 

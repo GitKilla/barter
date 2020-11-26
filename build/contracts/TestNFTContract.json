@@ -25292,8 +25292,8 @@
         }
       },
       "links": {},
-      "address": "0x192705345aCEe6481354A09caBc695C6107a147b",
-      "transactionHash": "0x5e2f157273223ca76af955c4914197d9677a6192d72f35102b92c49c041a9262"
+      "address": "0x4DE4640051ECD928983Ce96dB7285Bc5AB0027a4",
+      "transactionHash": "0x14ae13360e5b0c98a938512402dabee7e330996656047b19d0b69d1fc854923d"
     },
     "5776": {
       "events": {
@@ -25461,7 +25461,7 @@
     }
   },
   "schemaVersion": "3.2.5",
-  "updatedAt": "2020-11-24T17:48:41.425Z",
+  "updatedAt": "2020-11-25T21:05:50.002Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "see https://eips.ethereum.org/EIPS/eip-721",

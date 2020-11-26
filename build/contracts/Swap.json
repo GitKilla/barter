@@ -26660,11 +26660,81 @@
           ],
           "name": "LogOfferAdded",
           "type": "event"
+        },
+        "0x2da7e305ceb48fef36341502bc5156b1c75bcbd57f9f2b2da4af12c317928413": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            }
+          ],
+          "name": "LogFeeChange",
+          "type": "event"
+        },
+        "0x6763bb58d129888ef436ff602ea74ab468fd85e3d58ca5c556e2bbf259a558fa": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerAcceptedId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "userAccepted",
+              "type": "address"
+            }
+          ],
+          "name": "LogOfferAccepted",
+          "type": "event"
+        },
+        "0x117f8d3f314599cb970faaf58f1fabb3d0c7eb38ca1d39d79a04840a78678148": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerAddedId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "userAdded",
+              "type": "address"
+            }
+          ],
+          "name": "LogOfferAdded",
+          "type": "event"
+        },
+        "0xa1995f8c2b60cf6837bebd94e80c01f0b34a8ad9123fb314fa4ddb08ef148b61": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerCanceledId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "userCanceled",
+              "type": "address"
+            }
+          ],
+          "name": "LogOfferCanceled",
+          "type": "event"
         }
       },
       "links": {},
-      "address": "0xb7a516820064118c02CFAE0E5cDBeC8169eEC8F7",
-      "transactionHash": "0xc2664b4cf9623c35023fc7982b915798315bd8d19bc633d0d9c90f61edbf2073"
+      "address": "0x7652a6791c304794de601f366B5B768CDb4CfBeA",
+      "transactionHash": "0xca1c6a852b18cc51d484aa6a9bfdb70354166632ab170008f747fb3d418f571e"
     },
     "5776": {
       "events": {
@@ -26913,7 +26983,7 @@
     }
   },
   "schemaVersion": "3.2.5",
-  "updatedAt": "2020-11-24T17:48:41.410Z",
+  "updatedAt": "2020-11-25T21:05:49.989Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

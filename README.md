@@ -4,6 +4,8 @@ This project is an NFT trading interface that allows people to create trades wit
 
 It does this by allowing users to create an 'offer', which is a combination of NFT IDs and Ether that the user has as well as that another address has, and posting it to Ethereum. Once an offer is created, only the target address can send a transaction to accept the offer. Once the offer is accepted, the Swap contract (given proper access) can transfer all of the agreed upon NFTs from one account to the other, as well as any ETH that was involved. This offer is then moved from Active to Closed, and there is no way to resurrect this offer once it is moved to the closed state. There are also a lot of getter functions in the Swap contract to ease the front-end development that are not necessary to understand.
 
+<h3>The ropsten contracts can also be interacted with at https://barter.finance, no setup necessary just ropsten ETH</h3>
+
 <h1>Directory Structure and Setup</h1>
 
 This project is born out of the truffle unbox react command so it has a truffle directory structure on the outside (for folders like build, scripts, test, and migrations), while the client folder houses the necessary user interface. 
@@ -12,7 +14,7 @@ To migrate the contracts to your ganache blockchain use the command in the barte
 
     truffle migrate --reset
 
-The truffle setup is configured to migrate the contracts to port 8545. You will then want to copy the contract addresses for both the TestNFTContract and Swap and paste them in their respective slots in App.js lines 68-71. **Keep these contract addresses for later because you will need them to run truffle console commands below.**
+The truffle setup is configured to migrate the contracts to port 8545. You will then want to copy the contract addresses for both the TestNFTContract and Swap and paste them in their respective slots in App.js lines 70-73. **Keep these contract addresses for later because you will need them to run truffle console commands below.**
 
 The user interface can be then be launched in a development environment via the command in the barter directory:
 
