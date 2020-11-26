@@ -42,8 +42,8 @@ Once the contracts have been deployed and the user interface has successfully in
 
 `swap.approveNFT(dcl.address, {from:accounts[0]})`
 
-2. You will need to approve the Swap contract for use of your NFTs. This can be done via the APPROVE TRADING button that will show up only if you have not approved the contract
+2. You will need to approve the Swap contract for use of your NFTs. Multiple transactions should appear when you attempt to propose a trade or accept a trade for the first time so watch out for those.
 
-3. You will need to mint your own NFTs to your address and another address so that you have items to trade. This can be done by pressing the two doggy bags in the top left corner of the react page, which will generate a random NFT (framed as Axie infinity's for the purpose of this project) and mint it to your address. 
+3. You will need to mint your own NFTs to your address and another address so that you have items to trade. This can be done by pressing the two doggy bags in the top left corner of the react page, which will generate a random NFT (framed as Axie infinity's for the purpose of this project) and mint it to your address. Occasionally this will fail, ignore this it is simply an issue with minting duplicate NFT IDs.
 
 Once these steps are complete you should be able to create offers via the propose trade button, and accept and cancel offers by clicking on the 'offers' button in the top right.
